@@ -321,8 +321,7 @@ void simpleDenoise(char *in_file, char *out_file)
                         float *buffer = (float *) calloc(handle->frameSize, sizeof(float));
                         if (buffer) {
                             memcpy(buffer, inBuffer, sizeof(float) * remainingSample);
-                            if (SimpleDenoise_Proc(handle, buffer, outBuffer) == 1)
-                                outBuffer += handle->frameSize;
+                            SimpleDenoise_Proc(handle, buffer, outBuffer);
                             free(buffer);
 
                             memcpy(outBuffer, handle->synthesis_mem, sizeof(float) * remainingSample);
