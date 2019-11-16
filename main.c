@@ -184,7 +184,7 @@ int SimpleDenoise_Init(SimpleDenoiseHandle *handle, size_t sampleRate, size_t ms
             || (handle->smooth_mem == NULL)
             || (handle->samples == NULL)
             || (handle->synthesis_mem == NULL) || (handle->windowing == NULL)
-            ) {
+                ) {
             SimpleDenoise_Free(handle);
             return 0;
         }
@@ -312,13 +312,8 @@ void simpleDenoise(char *in_file, char *out_file)
                             outBuffer += handle->frameSize;
                         inBuffer += handle->frameSize;
                     }
-                    if (remainingSample == 0) {
-                        inBuffer -= handle->frameSize;
-                        SimpleDenoise_Proc(handle, inBuffer, outBuffer);
-                        memcpy(outBuffer, handle->synthesis_mem, sizeof(float) * handle->frameSize);
-                    }
-                    else {
-                        float *buffer = (float *) calloc(handle->frameSize*2, sizeof(float));
+                    if (remainingSample != 0) {
+                        float *buffer = (float *) calloc(handle->frameSize * 2, sizeof(float));
                         if (buffer) {
                             memcpy(buffer, inBuffer, sizeof(float) * remainingSample);
                             SimpleDenoise_Proc(handle, buffer, outBuffer);
