@@ -295,7 +295,7 @@ void simpleDenoise(char *in_file, char *out_file)
             if (SimpleDenoise_Init(handle, sampleRate, ms) == 1) {
                 uint64_t frames = (sampleCount / handle->frameSize);
                 int remainingSample = (sampleCount % handle->frameSize);
-                float *output = (float *) calloc(sampleCount, sizeof(float));
+                float *output = (float *) calloc(sampleCount + remainingSample, sizeof(float));
                 if (output) {
                     float *inBuffer = input;
                     int sampling = 0;
@@ -313,13 +313,15 @@ void simpleDenoise(char *in_file, char *out_file)
                         inBuffer += handle->frameSize;
                     }
                     if (remainingSample != 0) {
+                        memcpy(outBuffer, handle->synthesis_mem, sizeof(float) * handle->frameSize);
+                    } else {
                         float *buffer = (float *) calloc(handle->frameSize * 2, sizeof(float));
                         if (buffer) {
                             memcpy(buffer, inBuffer, sizeof(float) * remainingSample);
                             SimpleDenoise_Proc(handle, buffer, outBuffer);
-                            free(buffer);
-
+                            outBuffer += handle->frameSize;
                             memcpy(outBuffer, handle->synthesis_mem, sizeof(float) * remainingSample);
+                            free(buffer);
                         }
                     }
                     double time_interval = calcElapsed(startTime, now());
