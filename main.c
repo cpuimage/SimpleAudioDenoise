@@ -295,7 +295,7 @@ void simpleDenoise(char *in_file, char *out_file)
             if (SimpleDenoise_Init(handle, sampleRate, ms) == 1) {
                 uint64_t frames = (sampleCount / handle->frameSize);
                 int remainingSample = (sampleCount % handle->frameSize);
-                float *output = (float *) calloc(sampleCount + remainingSample, sizeof(float));
+                float *output = (float *) calloc(sampleCount + handle->frameSize, sizeof(float));
                 if (output) {
                     float *inBuffer = input;
                     int sampling = 0;
